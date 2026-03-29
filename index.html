@@ -2,181 +2,131 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="description" content="Equipment Register" />
+    <meta name="description" content="Engineer Competency" />
     <title>Engineer competency</title>
 
-    <link rel="preconnect" href="https://www.carlstahl.com" />
-    <link rel="preconnect" href="https://script.google.com" />
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://www.carlstahl.com/images/favicon.ico"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://www.carlstahl.com/images/favicon.ico"
-    />
+    <link rel="icon" type="image/x-icon" href="https://www.carlstahl.com/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="https://www.carlstahl.com/images/favicon.ico" />
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        zoom: 0.95;
-        width: 105.26vw;
-        height: 105.26vh;
-        overflow: hidden;
-        background: #f5f5f5;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
       body {
         width: 100%;
-        height: 100%;
-        overflow: hidden;
+        height: 100vh;
         display: flex;
+        align-items: center;
+        justify-content: center;
         flex-direction: column;
         background: #f5f5f5;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         -webkit-font-smoothing: antialiased;
-        overscroll-behavior: none;
-        touch-action: pan-x pan-y;
       }
 
-      .iframe-container {
-        flex: 1;
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: block;
-      }
-
-      /* Loading indicator */
-      .loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+        padding: 48px 40px 40px;
+        max-width: 420px;
+        width: 90%;
         text-align: center;
-        color: #666;
-        z-index: 5;
-        pointer-events: none;
       }
 
-      .loading-spinner {
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #3498db;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 10px;
+      .logo {
+        margin-bottom: 28px;
       }
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+      .logo img {
+        width: 160px;
       }
 
-      .iframe-loaded .loading {
-        display: none;
+      .divider {
+        width: 48px;
+        height: 3px;
+        background: #c0392b;
+        border-radius: 2px;
+        margin: 0 auto 24px;
       }
 
-      @media screen and (max-width: 768px) {
-        html {
-          width: 105.26vw;
-          height: 105.26vh;
-        }
-        body {
-          position: fixed;
-          width: 100%;
-          height: 100%;
-        }
+      h1 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 8px;
+        letter-spacing: 0.2px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #c0392b;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 14px 32px;
+        border-radius: 9px;
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: background 0.2s, transform 0.1s;
+        box-shadow: 0 2px 10px rgba(192,57,43,0.25);
+      }
+
+      .btn:hover { background: #e74c3c; transform: translateY(-1px); }
+      .btn:active { transform: scale(0.98); }
+
+      .btn svg { flex-shrink: 0; }
+
+      .note {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #bbb;
       }
     </style>
   </head>
   <body>
-    <div class="iframe-container" id="iframeContainer">
-      <div class="loading" id="loadingEl">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
 
-      <iframe
-        id="mainFrame"
-        src="https://script.google.com/macros/s/AKfycbzzqn9jAxly28ppmhF5QnWaVS6XnPPimzctz9ynM_V9ufz42gMBOc1fKCUSOuue6od5pw/exec"
-        loading="eager"
-        allow="camera; microphone; geolocation"
-        title="CoC Certificate Application Form"
+    <div class="card">
+      <div class="logo">
+        <img src="https://www.carlstahl.com/images/logo/CarlStahl_Logo_RGB.svg" alt="Carl Stahl">
+      </div>
+      <div class="divider"></div>
+      <h1>Engineer Competency</h1>
+      <p>Click below to open the Engineer Competency form. It will open securely in a new tab.</p>
+
+      <a class="btn"
+        href="https://script.google.com/macros/s/AKfycbzzqn9jAxly28ppmhF5QnWaVS6XnPPimzctz9ynM_V9ufz42gMBOc1fKCUSOuue6od5pw/exec"
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        <p>
-          Your browser doesn't support iframes. Please
-          <a
-            href="https://script.google.com/macros/s/AKfycbzzqn9jAxly28ppmhF5QnWaVS6XnPPimzctz9ynM_V9ufz42gMBOc1fKCUSOuue6od5pw/exec"
-          >
-            click here
-          </a>
-          to access the form.
-        </p>
-      </iframe>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Open Form
+      </a>
+
+      <div class="note">Opens in a new tab &nbsp;·&nbsp; Powered by Google Apps Script</div>
     </div>
 
     <script>
-      (function () {
-        "use strict";
-
-        const iframe = document.getElementById("mainFrame");
-        const loading = document.getElementById("loadingEl");
-
-        // Hide loader when iframe loads
-        iframe.addEventListener("load", function () {
-          loading.style.display = "none";
-        });
-
-        // Orientation change — force repaint
-        window.addEventListener("orientationchange", function () {
-          setTimeout(function () {
-            iframe.style.height = "99.9%";
-            setTimeout(function () {
-              iframe.style.height = "100%";
-            }, 80);
-          }, 150);
-        });
-
-        // Prevent double-tap zoom on iOS
-        let lastTouchEnd = 0;
-        document.addEventListener(
-          "touchend",
-          function (e) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) e.preventDefault();
-            lastTouchEnd = now;
-          },
-          { passive: false },
-        );
-      })();
+      // Auto-redirect after 1.5s if user doesn't click
+      setTimeout(function() {
+        window.location.href = "https://script.google.com/macros/s/AKfycbzzqn9jAxly28ppmhF5QnWaVS6XnPPimzctz9ynM_V9ufz42gMBOc1fKCUSOuue6od5pw/exec";
+      }, 1500);
     </script>
+
   </body>
 </html>
