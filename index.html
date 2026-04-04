@@ -1,304 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Engineer Authorization — BackOffice</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --navy:        #0B1A2E;
-      --navy-mid:    #112340;
-      --navy-light:  #1A3560;
-      --yellow:      #F5C400;
-      --yellow-dim:  #C9A000;
-      --yellow-glow: rgba(245,196,0,0.18);
-      --text-main:   #E8EDF5;
-      --text-muted:  #7A90AE;
-      --border:      rgba(245,196,0,0.22);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Equipment Register" />
+    <title>Engineer Authorization </title>
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <link rel="preconnect" href="https://www.carlstahl.com" />
+    <link rel="preconnect" href="https://script.google.com" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://www.carlstahl.com/images/favicon.ico"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://www.carlstahl.com/images/favicon.ico"
+    />
 
-    body {
-      background: var(--navy);
-      color: var(--text-main);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    /* ── Grid overlay ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(245,196,0,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(245,196,0,0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
+      html {
+        zoom: 0.95;
+        width: 105.26vw;
+        height: 105.26vh;
+        overflow: hidden;
+        background: #f5f5f5;
+      }
 
-    /* ── Radial glow behind card ── */
-    body::after {
-      content: '';
-      position: fixed;
-      width: 700px; height: 700px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,196,0,0.07) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
-    }
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: #f5f5f5;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overscroll-behavior: none;
+        touch-action: pan-x pan-y;
+      }
 
-    /* ── Corner brackets ── */
-    .corner {
-      position: fixed;
-      width: 40px; height: 40px;
-      border-color: var(--yellow-dim);
-      border-style: solid;
-      opacity: 0.5;
-    }
-    .corner.tl { top: 24px; left: 24px;  border-width: 2px 0 0 2px; }
-    .corner.tr { top: 24px; right: 24px; border-width: 2px 2px 0 0; }
-    .corner.bl { bottom: 24px; left: 24px;  border-width: 0 0 2px 2px; }
-    .corner.br { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
+      .iframe-container {
+        flex: 1;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
 
-    /* ── Card ── */
-    .card {
-      position: relative;
-      z-index: 1;
-      background: linear-gradient(160deg, var(--navy-mid) 0%, var(--navy) 100%);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 56px 64px 52px;
-      width: min(560px, 92vw);
-      text-align: center;
-      box-shadow:
-        0 0 0 1px rgba(245,196,0,0.06),
-        0 32px 80px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(245,196,0,0.12);
-      animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
-    }
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+      /* Loading indicator */
+      .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #666;
+        z-index: 5;
+        pointer-events: none;
+      }
 
-    /* ── Top accent bar ── */
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 10%; right: 10%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-      border-radius: 0 0 2px 2px;
-    }
+      .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+      }
 
-    /* ── Lock icon ── */
-    .icon-wrap {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 72px; height: 72px;
-      border: 1.5px solid var(--border);
-      border-radius: 50%;
-      margin-bottom: 28px;
-      background: radial-gradient(circle at 50% 60%, var(--navy-light), var(--navy-mid));
-      box-shadow: 0 0 24px var(--yellow-glow);
-      animation: pulse 3s ease-in-out infinite;
-    }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
 
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 24px var(--yellow-glow); }
-      50%       { box-shadow: 0 0 40px rgba(245,196,0,0.28); }
-    }
+      .iframe-loaded .loading {
+        display: none;
+      }
 
-    .icon-wrap svg { width: 32px; height: 32px; }
-
-    /* ── System label ── */
-    .sys-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.3em;
-      color: var(--yellow-dim);
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    /* ── Title ── */
-    h1 {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: clamp(26px, 5vw, 36px);
-      letter-spacing: 0.04em;
-      color: var(--text-main);
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-
-    h1 span { color: var(--yellow); }
-
-    /* ── Subtitle ── */
-    .subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      letter-spacing: 0.01em;
-      margin-bottom: 36px;
-    }
-
-    /* ── Divider ── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      margin-bottom: 32px;
-    }
-
-    /* ── Status badge ── */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(245,196,0,0.08);
-      border: 1px solid rgba(245,196,0,0.25);
-      border-radius: 2px;
-      padding: 8px 18px;
-      margin-bottom: 28px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      color: var(--yellow);
-      text-transform: uppercase;
-    }
-
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--yellow);
-      animation: blink 1.4s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
-    }
-
-    /* ── Description ── */
-    .desc {
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-muted);
-      margin-bottom: 36px;
-      padding: 0 8px;
-    }
-
-    .desc strong {
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    /* ── Progress bar ── */
-    .progress-wrap {
-      margin-bottom: 10px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-    }
-
-    .progress-bar {
-      height: 4px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, var(--yellow-dim), var(--yellow));
-      border-radius: 2px;
-      animation: fillBar 1.6s 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
-    }
-
-    @keyframes fillBar {
-      to { width: 68%; }
-    }
-
-    /* ── Footer note ── */
-    .footer-note {
-      margin-top: 36px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      color: rgba(122,144,174,0.5);
-      text-transform: uppercase;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
-
-  <div class="card">
-
-    <div class="icon-wrap">
-      <!-- Lock SVG -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        <circle cx="12" cy="16" r="1.2" fill="#F5C400" stroke="none"/>
-      </svg>
-    </div>
-
-    <div class="sys-label">BackOffice Portal — v2.0</div>
-
-    <h1>Engineer <span>Authorization</span></h1>
-    <p class="subtitle">Access Control &amp; Identity Management System</p>
-
-    <div class="divider"></div>
-
-    <div class="status-badge">
-      <span class="dot"></span>
-      Under Development
-    </div>
-
-    <p class="desc">
-      The <strong>Engineer Authorization Module</strong> is currently being built.<br/>
-      This system will provide secure access management,<br/>
-      role-based permissions, and audit trails for backoffice staff.
-    </p>
-
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Build Progress</span>
-        <span>68%</span>
+      @media screen and (max-width: 768px) {
+        html {
+          width: 105.26vw;
+          height: 105.26vh;
+        }
+        body {
+          position: fixed;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="iframe-container" id="iframeContainer">
+      <div class="loading" id="loadingEl">
+        <div class="loading-spinner"></div>
+        <p>Loading System...</p>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
-      </div>
+
+      <iframe
+        id="mainFrame"
+        src="https://script.google.com/macros/s/AKfycbz48j-CCP0hML8TmvCDU_gu9DyWC6XuGQdXPRdDaapmxwTF7t1ODl_rccetgsnHVdJ6/exec"
+        loading="eager"
+        allow="camera; microphone; geolocation"
+        title="Engineer Authorization System"
+      >
+        <p>
+          Your browser doesn't support iframes. Please
+          <a
+            href="https://script.google.com/macros/s/AKfycbz48j-CCP0hML8TmvCDU_gu9DyWC6XuGQdXPRdDaapmxwTF7t1ODl_rccetgsnHVdJ6/exec"
+          >
+            click here
+          </a>
+          to access the form.
+        </p>
+      </iframe>
     </div>
 
-    <div class="footer-note">Releasing Soon &nbsp;·&nbsp; Stay Tuned</div>
+    <script>
+      (function () {
+        "use strict";
 
-  </div>
+        const iframe = document.getElementById("mainFrame");
+        const loading = document.getElementById("loadingEl");
 
-</body>
+        // Hide loader when iframe loads
+        iframe.addEventListener("load", function () {
+          loading.style.display = "none";
+        });
+
+        // Orientation change — force repaint
+        window.addEventListener("orientationchange", function () {
+          setTimeout(function () {
+            iframe.style.height = "99.9%";
+            setTimeout(function () {
+              iframe.style.height = "100%";
+            }, 80);
+          }, 150);
+        });
+
+        // Prevent double-tap zoom on iOS
+        let lastTouchEnd = 0;
+        document.addEventListener(
+          "touchend",
+          function (e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+          },
+          { passive: false },
+        );
+      })();
+    </script>
+  </body>
 </html>
